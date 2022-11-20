@@ -39,6 +39,25 @@ catch (Exception e)
 
 
 
+foreach (var dir in directoryes)
+{
+    var files = Directory.GetFiles(dir);
+    foreach (var f in files)
+    {
+        if (!File.Exists(f))
+            continue;
+        
+        using var stream = new StreamReader(Path.Combine(dir, f));
+        while (!stream.EndOfStream)
+        {
+            Console.WriteLine($"Папка: {dir}\nФайл: {f}\nСодержимое : {stream.ReadToEnd()}");
+            Console.WriteLine();
+        }
+    }
+}
+
+
+
 Console.ReadKey();
 
 
