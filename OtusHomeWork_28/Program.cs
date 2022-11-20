@@ -1,26 +1,50 @@
-﻿var pathDir = @"C:\Otus\TestDir";
-var pathFile = Path.Combine(pathDir, "TestFile");
+﻿
+var rootDir = @"C:\Otus";
+var directory =  @"TestDir";
+var file = @"TestFile";
 
 var countDir = 2;
 var countFile = 10;
 
-for (int i = 1; i <= countDir; i++)
+try
 {
-    CreateDir(pathDir, i.ToString());
+    for (int i = 1; i <= countDir; i++)
+    {
+        CreateDir(Path.Combine(rootDir, directory) + i);
+    }
+}
+catch (Exception e)
+{
+    Console.WriteLine(e.Message);
 }
 
-for (int i = 1; i <= countFile; i++)
+var directoryes = Directory.GetDirectories(rootDir);
+
+
+try
 {
-    CreateFile(pathFile, i.ToString(), ".txt");
+    foreach (var dir in directoryes)
+    {
+        for (int i = 1; i <= countFile; i++)
+        {
+            CreateFile(Path.Combine(dir, file) + i, ".txt");
+        }
+    }
 }
+catch (Exception e)
+{
+    Console.WriteLine(e.Message);
+    throw;
+}
+
 
 
 Console.ReadKey();
 
 
-void CreateDir(string path, string name)
+void CreateDir(string path)
 {
-    var dir = new DirectoryInfo(Path.Combine(path, name));
+    var dir = new DirectoryInfo(path);
 
     try
     {
@@ -33,13 +57,14 @@ void CreateDir(string path, string name)
     }
 }
 
-void CreateFile(string path, string name, string ext)
+void CreateFile(string path, string ext)
 {
-    var file = Path.Combine(path, name + ext);
+    var fileName = path + ext;
     
     try
     {
-        File.Create(file);
+        using var writer = File.CreateText(fileName);
+        writer.WriteLine($"{Path.GetFileName(fileName)} \n {DateTime.Now}");
     }
     catch (Exception e)
     {
